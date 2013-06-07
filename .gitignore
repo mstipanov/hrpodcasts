@@ -6,3 +6,5 @@
 *.iws
 index.html
 templates
+pmip/
+atlassian-ide-plugin.xml
