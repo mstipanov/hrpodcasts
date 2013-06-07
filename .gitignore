@@ -1,0 +1,8 @@
+*.swp
+*.swo
+*.pyc
+*.iml
+*.ipr
+*.iws
+index.html
+templates
