@@ -52,7 +52,7 @@ class RssPage(mod_webapp2.RequestHandler):
         data = self.readUrl(baseUrl + '/slusaonica/?' + urllib.urlencode({'q': showName.encode('utf-8')}))
 
         searchItems = re.findall(
-            r'<article id="(.+?)">.*<input type="hidden" name="file" value="(.+?)" />.*<input type="hidden" name="caption" value="(.+?)" />.*<a href="(.+?)" class="image">.*<img src="(.+?)" alt=".+?" title=".+?">.*</a>.*<p>(.+?)</p>.*<p>Posljednja emisija: <strong>(.+?)</strong></p>.*</article>',
+            r'<article id="(.+?)">.*?<input type="hidden" name="file" value="(.+?)" />.*?<input type="hidden" name="caption" value="(.+?)" />.*?<a href="(.+?)" class="image">.*?<img src="(.+?)" alt=".+?" title=".+?">.*</a>.*?</article>',
             data, re.DOTALL)
         if (len(searchItems) == 0):
             self.response.status = '404 Not Found'
@@ -65,7 +65,7 @@ class RssPage(mod_webapp2.RequestHandler):
 
         data = self.readUrl(baseUrl + chanelDetailsUrl)
         chennelDataList = re.findall(
-            r'<div class="breadcrumbs">.*<ul>.*<li><a href="/">Naslovnica</a></li>.*<li><a href="/slusaonica/">Slušaonica</a></li>.*<li><a href="(.+?)">(.+?)</a></li>.*<li class="selected">.+?</li>.*</ul>.*</div>.*<aside class="aside-content padding">.*<blockquote>.*<h2>.+?</h2>.*<p>(.+?)</p>.*<p class="read_more"><a href=".+?">.+?</a></p>.*</blockquote>.*</aside>.*<h3>Poslušajte</h3>.*<ul>.*<li>.*<a href=".+?">.+?<span class="date">(.+?)</span>.*</a>.*</li>',
+            r'<div class="breadcrumbs">.*?<ul>.*?<li><a href="/">Naslovnica</a></li>.*?<li><a href="/slusaonica/">Slušaonica</a></li>.*?<li><a href="(.+?)">(.+?)</a></li>.*?<li class="selected">.+?</li>.*?</ul>.*?</div>.*?<h3>Poslušajte</h3>.*?<ul>.*?<li>.*?<a href=".+?">.+?<span class="date">(.+?)</span>.*?</a>.*?</li>',
             data, re.DOTALL)
         if (len(chennelDataList) == 0):
             self.response.status = '404 Not Found'
@@ -79,7 +79,7 @@ class RssPage(mod_webapp2.RequestHandler):
         channel.title = chennelData[1]
         channel.description = chennelData[2]
         channel.image = chanelImageUrl
-        channel.lastBuildDate = chennelData[3]
+        #channel.lastBuildDate = chennelData[3]
 
         articleDataList = re.findall(r'<div class="widget archive">.*?<h3>Poslušajte</h3>(.*?)</div>', data, re.DOTALL)
         data = ''
@@ -97,7 +97,7 @@ class RssPage(mod_webapp2.RequestHandler):
         channelContent = channelContent.replace("${channel.title}", channel.title)
         channelContent = channelContent.replace("${channel.link}", baseUrl + channel.link)
         channelContent = channelContent.replace("${channel.description}", channel.description)
-        channelContent = channelContent.replace("${channel.lastBuildDate}", self.formatTime(channel.lastBuildDate))
+        channelContent = channelContent.replace("${channel.lastBuildDate}", self.formatTime(None))
         channelContent = channelContent.replace("${channel.image}", baseUrl + channel.image)
 
         with open('templates/item_template.xml', 'r') as content_file:
@@ -123,12 +123,12 @@ class RssPage(mod_webapp2.RequestHandler):
         data = self.readUrl(baseUrl + articleData[0])
 
         chennelDatas = re.findall(
-            r'<div class="main-content">.*?<article class="article-content">.*?<div class="user-content">.*?<img src="(.+?)" title="(.+?)" alt=".*?" />.*?<h1>.*?</h1>.*?</article>.*?<script type="text/javascript">.*?mp3: "(.+?)".*?</script>.*?</div>',
+            r'<div class="main-content">.*?<article class="article-content">.*?<div class="user-content">.*?<h1>(.*?)</h1>.*?</article>.*?<script type="text/javascript">.*?mp3: "(.+?)".*?</script>.*?</div>',
             data, re.DOTALL)
 
         article = Article()
-        article.link = chennelDatas[0][2]
-        article.title = chennelDatas[0][1]
+        article.title = chennelDatas[0][0]
+        article.link = chennelDatas[0][1]
         article.pubDate = articleData[2]
         article.description = ''
 
