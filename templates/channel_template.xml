@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>${channel.title}</title>
+        <link>${channel.link}</link>
+        <description>${channel.description}</description>
+        <language>hr-HR</language>
+        <copyright>HRT</copyright>
+        <lastBuildDate>${channel.lastBuildDate}</lastBuildDate>
+        <ttl>60</ttl>
+        <image><url>${channel.image}</url><title>${channel.title}</title><link>${channel.link}</link></image>
+        ${channel.items}
+    </channel>
+</rss>

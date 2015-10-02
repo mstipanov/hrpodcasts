@@ -1,0 +1,8 @@
+<item>
+    <title>${item.title}</title>
+    <link>${item.link}</link>
+    <description>${item.description}</description>
+    <pubDate>${item.pubDate}</pubDate>
+    <enclosure url="${item.link}" length="" type="audio/mpeg"/>
+    <category>Podcasts</category>
+</item>

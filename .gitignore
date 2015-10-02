@@ -4,7 +4,6 @@
 *.iml
 *.ipr
 *.iws
-index.html
-templates
 pmip/
 atlassian-ide-plugin.xml
+local/

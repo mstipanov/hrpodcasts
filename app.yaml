@@ -1,5 +1,5 @@
 application: hrpodcasts
-version: 3
+version: 4
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -12,6 +12,15 @@ handlers:
 - url: /robots.txt
   static_files: robots.txt
   upload: robots.txt
+
+- url: /js
+  static_dir: js
+
+- url: /css
+  static_dir: css
+
+- url: /images
+  static_dir: images
 
 - url: /.*
   script: app.application
