@@ -22,41 +22,46 @@ class Parser():
 
     def parseChannel(self, showName):
         baseUrl = 'http://radio.hrt.hr'
-        data = self.readUrl(baseUrl + '/slusaonica/?' + urllib.urlencode({'q': showName.encode('utf-8')}))
+        data = self.readUrl(baseUrl + '/emisije/?' + urllib.urlencode({'q': showName.encode('utf-8')}))
 
         urls = re.findall(
             # r'<div class="caption">.*?<h4>.*?<a href="(.+?)">.*?</a>.*?</h4>.*?</div>',
-            r'<div class="thumbnail thumbnail-shows">.*?<a href="(.+?)">.*?<img src="(.+?)" alt=".*?" title=".*?" class="normal_size">.*?</a>.*?<div class="caption">.*?<h4>.*?</h4>.*?</div>.*?</div>',
+            r'<div class="col-md-4 col-sm-6 item split">.*?<div class="thumbnail thumbnail-shows">.*?<a href="(.+?)">.*?<img src="(.+?)" alt=".*?" title="(.+?)" class="normal_size">.*?</a>.*?<div class="caption">.*?<h4><a href=".*?">.*?</a></h4>.*?<p>.*?</p>.*?<p>.*?</p>.*?</div>.*?</div>.*?</div>',
             data, re.DOTALL)
 
         if not urls:
             return None
 
+        showLink = baseUrl + urls[0][0]
         image = baseUrl + urls[0][1]
-        link = baseUrl + urls[0][0]
+        title = urls[0][2]
 
-        data = self.readUrl(link)
-
-        searchItems = re.findall(
-            r'<div class="widget">.*?<div class="schedule-heading">(.+?)</div>.*?<div class="about-show">.*?<a href="(.+?)">.+?</a>.*?<p>.*?</p>.*?<p>(.+?)</p>.*?</div>.*?</div>',
-            data, re.DOTALL)
-
-        title = searchItems[0][0]
-        showLink = baseUrl + searchItems[0][1]
-        description = searchItems[0][2]
+        data = self.readUrl(showLink)
 
         searchItems = re.findall(
-            r'<div class="col-sm-3 col-xs-6">.*?<strong>EMITIRANO</strong>:<br>(.+?)</div>',
+            r'<meta name="description" content="(.+)" />',
             data, re.DOTALL)
 
-        lastBuildDate = searchItems[0].strip()
+        description = searchItems[0]
+
+        # searchItems = re.findall(
+        #     r'<div class="row">.*?<div class="col-md-12 split tema1">.*?<div class="media">.*?<div class="media-left">.*?<a href="(.+?)">.*?</a>.*?</div>.*?<div class="media-body">.*?<small>.*?<a href=".*?">.*?</a>.*?</small>.*?</div>.*?</div>.*?</div>.*?</div>',
+        #     data, re.DOTALL)
+        #
+        # showLink = baseUrl + searchItems[0]
+
+        # searchItems = re.findall(
+        #     r'<div class="col-sm-3 col-xs-6">.*?<strong>EMITIRANO</strong>:<br>(.+?)</div>',
+        #     data, re.DOTALL)
+        #
+        # lastBuildDate = searchItems[0].strip()
 
         channel = Channel()
         channel.link = showLink.strip()
         channel.title = title.strip()
         channel.description = description.strip()
         channel.image = image.strip()
-        channel.lastBuildDate = lastBuildDate.strip()
+        # channel.lastBuildDate = lastBuildDate.strip()
         channel.articles = self.parseArticles(baseUrl, showLink)
         return channel
 
