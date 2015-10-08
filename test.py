@@ -2,6 +2,6 @@ from parsers import Parser
 
 __author__ = 'mstipanov'
 
-channel = Parser().parse("inventura")
+channel = Parser().parse("andromeda")
 
 print channel.to_JSON()
