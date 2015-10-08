@@ -38,7 +38,7 @@ class Parser():
         data = self.readUrl(showLink)
 
         searchItems = re.findall(
-            r'<meta name="description" content="(.+)" />',
+            r'<meta name="description" content="(.+?)" />',
             data, re.DOTALL)
 
         description = searchItems[0]
