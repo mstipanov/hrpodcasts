@@ -29,7 +29,7 @@
 
         function search() {
             var showName = $('#tfq2b').val();
-            var url = encodeURI('http://hrpodcasts.appspot.com/rss?show=' + showName);
+            var url = encodeURI('/rss?show=' + showName);
             $('#test').rssfeed(url, {
                 limit: 5,
                 linktarget: '_blank'

@@ -1,9 +1,8 @@
 application: hrpodcasts
-version: 5
+version: 7
 runtime: python27
 api_version: 1
-threadsafe: true
-
+threadsafe: yes
 
 handlers:
 - url: /
@@ -30,3 +29,6 @@ handlers:
 - url: /.*
   script: app.application
 
+libraries:
+- name: webapp2
+  version: "2.5.2"

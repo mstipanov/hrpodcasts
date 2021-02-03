@@ -24,25 +24,32 @@ class Parser():
         baseUrl = 'http://radio.hrt.hr'
         data = self.readUrl(baseUrl + '/emisije/?' + urllib.urlencode({'q': showName.encode('utf-8')}))
 
-        urls = re.findall(
+        all_urls = re.findall(
             r'<div class="col-md-4 col-sm-6 item split">.*?<div class="thumbnail thumbnail-shows">.*?<a href="(.+?)">.*?<img src="(.+?)" alt=".*?" title="(.+?)" class="normal_size">.*?</a>.*?<div class="caption">.*?<h4><a href=".*?">.*?</a></h4>.*?<p>.*?</p>.*?<p>.*?</p>.*?</div>.*?</div>.*?</div>',
-            data, re.DOTALL)
+            data, re.DOTALL + re.IGNORECASE)
 
-        if not urls:
+        if not all_urls:
             return None
 
-        showLink = baseUrl + urls[0][0]
-        image = baseUrl + urls[0][1]
-        title = urls[0][2]
+        channel = None
+        for u in all_urls:
+            if "arhiv" in u[2].lower():
+                continue
+            channel = self.tryParseChannel(baseUrl, u)
+            if len(channel.articles) > 0:
+                break
 
+        return channel
+
+    def tryParseChannel(self, baseUrl, url):
+        showLink = baseUrl + url[0]
+        image = baseUrl + url[1]
+        title = url[2]
         data = self.readUrl(showLink)
-
         searchItems = re.findall(
             r'<meta name="description" content="(.+?)" />',
-            data, re.DOTALL)
-
+            data, re.DOTALL + re.IGNORECASE)
         description = searchItems[0]
-
         channel = Channel()
         channel.link = showLink.strip()
         channel.title = title.strip()
@@ -57,7 +64,7 @@ class Parser():
 
         searchItems = re.findall(
             r'<div class="row">.*?<div class="col-md-12 split tema1">.*?<div class="media">.*?<div class="media-left">.*?<a href="(.+?)">.*?</a>.*?</div>.*?<div class="media-body">.*?</div>.*?</div>.*?</div>.*?</div>',
-            data, re.DOTALL)
+            data, re.DOTALL + re.IGNORECASE)
 
         articles = []
         for searchItem in searchItems:
@@ -71,8 +78,8 @@ class Parser():
         data = self.readUrl(link)
 
         searchItems = re.findall(
-            r'<article class="news-article">.*?<div class="article-info">.*?<div class="col-sm-3 col-xs-6">.*?<strong>EMITIRANO</strong>:<br>(.+?)</div>.*?</div>.*?<div id="jplayer_container" class="audio-player  played repeat-on">.*?<div class="track-info">.*?<p class="track-title">(.+?)</p>.*?<div class="download-section">.*?<h4>Preuzmite datoteku</h4>.*?<a href="(.+?)" class="attachment-file">.*?<span class="file-size pull-right">(.+?)</span>.*?</a>.*?</div>.*?<blockquote>.*?<h3>.*?</h3>.*?<p>(.+?)</p>.*?</blockquote>.*?</article>',
-            data, re.DOTALL)
+            r'<article class="news-article">.*?<div class="article-info">.*?<div class="col-sm-3 col-xs-6">.*?<strong>EMITIRANO</strong>:<br>(.+?)</div>.*?</div>.*?<div id="jplayer_container" class="audio-player  played repeat-on">.*?<div class="track-info">.*?<p class="track-title">(.+?)</p>.*?<div class="download-section">.*?<h4>Preuzmite datoteku</h4>.*?<a\s.?href="(.+?)"\s.?class="attachment-file".*?<span class="file-size pull-right">(.+?)</span>.*?</a>.*?</div>.*?<blockquote>.*?<h3>.*?</h3>.*?<p>(.+?)</p>.*?</blockquote>.*?</article>',
+            data, re.DOTALL + re.IGNORECASE)
 
         if not searchItems:
             return None
