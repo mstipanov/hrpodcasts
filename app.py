@@ -17,7 +17,7 @@ class RssPage(mod_webapp2.RequestHandler):
     def formatTime(self, date):
         time_strptime = time.localtime()
         if date:
-            time_strptime = time.strptime(date, "%d.%m.%Y %H:%M")
+            time_strptime = time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
             #Tue, 28 May 2013 15:30:00 +0100
         return time.strftime("%a, %d %b %Y %H:%M:%S", time_strptime) + " +0100"
 

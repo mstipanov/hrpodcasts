@@ -1,5 +1,3 @@
-application: hrpodcasts
-version: 7
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -8,6 +6,10 @@ handlers:
 - url: /
   static_files: index.html
   upload: index.html
+
+- url: /index.html
+  static_files: index.html
+  upload: index2.html
 
 - url: /robots.txt
   static_files: robots.txt
