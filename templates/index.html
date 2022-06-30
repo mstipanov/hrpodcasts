@@ -10,7 +10,7 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
 
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>HR Podcasts</title>
 
     <script
@@ -126,7 +126,7 @@
 <h1>HR Podcasts - All Croatian Radio Shows in RSS</h1>
 <p><a href="https://radio.hrt.hr/slusaonica">List of all available shows is here</a></p>
 
-<a id="rssLink" href=""><img src="/images/rss_logo.gif" alt="RSS"/></a>
+<a id="rssLink" href=""><img src="{{url_for('static', filename='images/rss_logo.gif')}}" alt="RSS"/></a>
 
 <div id="canvas">
     <div id="heading">

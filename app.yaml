@@ -1,36 +1,22 @@
-runtime: python27
-api_version: 1
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3.7
 threadsafe: yes
 
-handlers:
-- url: /
-  static_files: index.html
-  upload: index.html
+liveness_check:
+  path: "/liveness_check"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
 
-- url: /index.html
-  static_files: index.html
-  upload: index2.html
-
-- url: /robots.txt
-  static_files: robots.txt
-  upload: robots.txt
-
-- url: /js
-  static_dir: js
-
-- url: /css
-  static_dir: css
-
-- url: /images
-  static_dir: images
-
-- url: /favicon.ico
-  static_files: images/favicon.ico
-  upload: images/favicon.ico
-
-- url: /.*
-  script: app.application
-
-libraries:
-- name: webapp2
-  version: "2.5.2"
+readiness_check:
+  path: "/readiness_check"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300
